@@ -1,5 +1,6 @@
-public class Array {
-	private int arr[];
+@SuppressWarnings("unchecked")
+public class Array<T> {
+	T arr[];
 	private int size;
 	private int cursor;
 	
@@ -9,16 +10,16 @@ public class Array {
 	 * 작성자: 박찬솔
 	 *****************************/
 	public Array() {
-		this.arr = new int[0];
+		this.arr = (T[]) new Object[0];
 		this.cursor = -1;
 		this.size = 0;
 	}
 	public Array(int size) {
-		this.arr = new int[size];
+		this.arr = (T[]) new Object[size];
 		this.cursor = -1;
 		this.size = size;
 	}
-	public Array(int[] arr) {
+	public Array(T[] arr) {
 		this.arr = arr;
 		this.cursor = -1;
 		this.size = arr.length;
@@ -45,8 +46,8 @@ public class Array {
 	 * 기능: 인덱스에 해당하는 값 반환
 	 * 작성자: 박찬솔
 	 *****************************/
-	public int get( int i ) {
-		if( i > cursor ) { return -2147483648; }
+	public T get( int i ) {
+		if( i > cursor ) { return null; }
 		else { return arr[i]; }
 		
 	}
@@ -56,14 +57,14 @@ public class Array {
 	 * 기능: 원하는 위치에 원하는 값 대입
 	 * 작성자: 박찬솔
 	 *****************************/
-	public boolean add(int value) {
+	public boolean add(T value) {
 		if( isFull() ) { return false; }
 		else {
 			arr[++cursor] = value;
 			return true;
 		}
 	}
-	public boolean add(int key, int value) {
+	public boolean add(int key, T value) {
 		if(key >= size) { return false; }
 		else {
 			arr[key] = value;
@@ -77,7 +78,7 @@ public class Array {
 	 * 기능: 찾고자 하는 값에 대한 인덱스 반환
 	 * 작성자: 박찬솔
 	 *****************************/
-	public int find(int value) {
+	public int find(T value) {
 		for(int i = 0; i <= cursor; i++) {
 			if( arr[i] == value ) { return i; }
 		}
@@ -89,7 +90,7 @@ public class Array {
 	 * 기능: 특정 값(1개)을 삭제
 	 * 작성자: 박찬솔
 	 *****************************/
-	public boolean remove(int value) {
+	public boolean remove(T value) {
 		int key = find(value);
 		if( key > 0 ) {
 			for(int i = key; i > cursor; i++) {
@@ -104,12 +105,12 @@ public class Array {
 	 * 기능: 특정 인덱스를 반환 및 삭제 
 	 * 작성자: 박찬솔
 	 *****************************/
-	public int pop() {
-		if( isEmpty() ) { return -2147483648; }
+	public T pop() {
+		if( isEmpty() ) { return null; }
 		else { return get(cursor--); }
 	}
-	public int pop(int key) {
-		int value = get(key);
+	public T pop(int key) {
+		T value = get(key);
 		for(int i = key; i <= cursor; i++) {
 			arr[i] = arr[i+1];
 		}
@@ -121,18 +122,18 @@ public class Array {
 	 * 기능: 배열 자료형 반환
 	 * 작성자: 박찬솔
 	 *****************************/
-	public int[] toArray() {
+	public T[] toArray() {
 		return arr;
 	}
-	public int[] toArray(int end) {
-		int[] result = new int[end];
+	public T[] toArray(int end) {
+		T[] result = (T[]) new Object[end];
 		for(int i = 0; i < end; i++) {
 			result[i] = arr[i];
 		}
 		return result;
 	}
-	public int[] toArray(int start,int end) {
-		int[] result = new int[end-start];
+	public T[] toArray(int start,int end) {
+		T[] result = (T[]) new Object[end-start];
 		for(int i = start; i < end; i++) {
 			result[i-start] = arr[i];
 		}
