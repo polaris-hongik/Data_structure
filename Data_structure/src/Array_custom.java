@@ -1,5 +1,5 @@
 @SuppressWarnings("unchecked")
-public class Array<T> {
+public class Array_custom<T> {
 	T arr[];
 	private int size;
 	private int cursor;
@@ -9,17 +9,17 @@ public class Array<T> {
 	 * 기능: 비어있는 어레이 클래스를 만든다.
 	 * 작성자: 박찬솔
 	 *****************************/
-	public Array() {
+	public Array_custom() {
 		this.arr = (T[]) new Object[0];
 		this.cursor = -1;
 		this.size = 0;
 	}
-	public Array(int size) {
+	public Array_custom(int size) {
 		this.arr = (T[]) new Object[size];
 		this.cursor = -1;
 		this.size = size;
 	}
-	public Array(T[] arr) {
+	public Array_custom(T[] arr) {
 		this.arr = arr;
 		this.cursor = -1;
 		this.size = arr.length;
@@ -122,21 +122,7 @@ public class Array<T> {
 	 * 기능: 배열 자료형 반환
 	 * 작성자: 박찬솔
 	 *****************************/
-	public T[] toArray() {
-		return arr;
-	}
-	public T[] toArray(int end) {
-		T[] result = (T[]) new Object[end];
-		for(int i = 0; i < end; i++) {
-			result[i] = arr[i];
-		}
-		return result;
-	}
-	public T[] toArray(int start,int end) {
-		T[] result = (T[]) new Object[end-start];
-		for(int i = start; i < end; i++) {
-			result[i-start] = arr[i];
-		}
-		return result;
-	}
+	public void toArray(T[] target) { for(int i = 0; i < cursor+1; i++) { target[i] = (T)arr[i]; } }
+	public void toArray(T[] target, int end){ for(int i = 0; i < end; i++) { target[i] = (T)arr[i]; } }
+	public void toArray(T[] target, int start,int end) { for(int i = start; i < end; i++) { target[i] = (T)arr[i]; } }
 }
