@@ -119,7 +119,7 @@ public class Array_custom<T> {
 	
 	/******************************
 	 * 이름: toArray 메서드
-	 * 기능: 배열 자료형 반환
+	 * 기능: 배열 포인터를 매개변수로 받아 직접 데이터 대입
 	 * 작성자: 박찬솔
 	 *****************************/
 	public void toArray(T[] target) { for(int i = 0; i < cursor+1; i++) { target[i] = (T)arr[i]; } }
