@@ -1,30 +1,33 @@
 @SuppressWarnings("unchecked")
 public class Vector_custom<T> {
-	T vec[];
+	Array_custom<T[]> vec = new Array_custom<T[]>(100000);
 	private int capacity;
+	private int chunk;
 	private int size;
 	
 	/******************************
 	 * 이름: Vector생성자
-	 * 기능: 비어있는 어레이 클래스를 만든다.
+	 * 기능: 비어있는 어레이 클래스를 Array_custom클래스에 만든다.
 	 * 작성자: 박찬솔
 	 *****************************/
 	public Vector_custom() {
-		this.vec = (T[]) new Object[0];
+		this.chunk = 100000;
+		this.vec.add((T[]) new Object[chunk]);
 		this.size = 0;
 		this.capacity = 0;
 	}
-	public Vector_custom(int capacity) {
-		this.vec = (T[]) new Object[capacity];
+	public Vector_custom(int chunk) {
+		this.chunk = chunk;
+		this.vec.add((T[]) new Object[chunk]);
 		this.size = 0;
-		this.capacity = capacity;
 	}
 	public Vector_custom(T[] arr) {
-		this.vec = arr;
+		this.chunk = 100000;
+		this.vec.add((T[]) new Object[chunk]);
+		this.capacity = 0;
 		this.size = 0;
-		this.capacity = vec.length;
+		add(arr);
 	}
-	
 	/******************************
 	 * 이름: Vector 기본 연산
 	 * 기능: Vector 크기 반환, 값을 채운 공간 크기 반환, 비었는지 가득찼는지 확인
@@ -37,7 +40,7 @@ public class Vector_custom<T> {
 		else { return false; }
 	}
 	public boolean isFull() {
-		if( size == capacity ) { return true; }
+		if( size >= capacity ) { return true; }
 		else { return false; }
 	}
 	
@@ -47,18 +50,14 @@ public class Vector_custom<T> {
 	 * 작성자: 박찬솔
 	 *****************************/
 	private void grow() {
-	    T[] temp=(T[]) new Object[capacity];
-	    capacity++;
-	    toArray(temp);
-	    vec = (T[]) new Object[capacity];
-	    for(int i = 0; i < size; i++) { vec[i] = (T)temp[i]; }
+	    capacity+=chunk;
+	    vec.add((T[]) new Object[chunk]);
 	}
-	private void grow(int x) {
-	    T[] temp=(T[]) new Object[capacity];
-	    capacity += x;
-	    toArray(temp);
-	    vec = (T[]) new Object[capacity];
-	    for(int i = 0; i < size; i++) { vec[i] = (T)temp[i]; }
+	private void grow(int i) {
+	    capacity+=(chunk*i);
+	    for(int j = 0; j < i; j++) {
+		    vec.add((T[]) new Object[chunk]);
+	    }
 	}
 	
 	/******************************
@@ -68,7 +67,7 @@ public class Vector_custom<T> {
 	 *****************************/
 	public T get( int i ) {
 		if( i > size ) { return null; }
-		else { return vec[i]; }
+		else { return vec.get(i/chunk)[i%chunk]; }
 	}
 	
 	/******************************
@@ -79,18 +78,19 @@ public class Vector_custom<T> {
 	public void add(T value) {
 		if( isFull() )
 			grow();
-		vec[size++] = value;
+		vec.get(size/chunk)[size%chunk] = value;
+		size++;
 	}
 	public void add(int key, T value) {
 		if(key >= capacity)
-			grow(key-capacity+1);
-		vec[key] = value;
+			grow((key-capacity)/chunk);
+		vec.get(size/chunk)[size%chunk] = value;
 		if(key+1 > size) { size = key+1; }
 	}
 	public void add(T[] arr) {
 		if(size+arr.length > capacity)
-			grow(size+arr.length-capacity);
-		for(int i = size; i < capacity; i++) { vec[i] = arr[i-size]; }
+			grow((size+arr.length-capacity)/chunk);
+		for(int i = 0; i < arr.length; i++) { vec.get((i+size)/chunk)[(i+size)%chunk] = arr[i]; }
 		size += arr.length;
 	}
 	
@@ -101,7 +101,7 @@ public class Vector_custom<T> {
 	 *****************************/
 	public int find(T value) {
 		for(int i = 0; i < size; i++) {
-			if( vec[i] == value ) { return i; }
+			if( vec.get(i/chunk)[i%chunk] == value ) { return i; }
 		}
 		return -1;
 	}
@@ -115,7 +115,7 @@ public class Vector_custom<T> {
 		int key = find(value);
 		if( key > 0 ) {
 			for(int i = key; i < size; i++) {
-				vec[i] = vec[i+1];
+				vec.get(i/chunk)[i%chunk] = vec.get(i/chunk)[i%chunk];
 			}
 			return true;
 		} else { return false; }
@@ -133,7 +133,7 @@ public class Vector_custom<T> {
 	public T pop(int key) {
 		T value = get(key);
 		for(int i = key; i < size; i++) {
-			vec[i] = vec[i+1];
+			vec.get(i/chunk)[i%chunk] = vec.get(i/chunk)[i%chunk];
 		}
 		return value;
 	}
@@ -143,7 +143,7 @@ public class Vector_custom<T> {
 	 * 기능: 배열 포인터를 매개변수로 받아 직접 데이터 대입
 	 * 작성자: 박찬솔
 	 *****************************/
-	public void toArray(T[] target) { for(int i = 0; i < size; i++) { target[i] = (T)vec[i]; } }
-	public void toArray(T[] target, int end){ for(int i = 0; i < end; i++) { target[i] = (T)vec[i]; } }
-	public void toArray(T[] target, int start,int end) { for(int i = start; i < end; i++) { target[i] = (T)vec[i]; } }
+	public void toArray(T[] target) { for(int i = 0; i < size; i++) { target[i] = (T)vec.get(i/chunk)[i%chunk]; } }
+	public void toArray(T[] target, int end){ for(int i = 0; i < end; i++) { target[i] = (T)vec.get(i/chunk)[i%chunk]; } }
+	public void toArray(T[] target, int start,int end) { for(int i = start; i < end; i++) { target[i] = (T)vec.get(i/chunk)[i%chunk]; } }
 }

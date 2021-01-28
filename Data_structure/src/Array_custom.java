@@ -1,6 +1,6 @@
 @SuppressWarnings("unchecked")
 public class Array_custom<T> {
-	T arr[];
+	private T arr[];
 	private int capacity;
 	private int size;
 	
