@@ -1,6 +1,6 @@
 @SuppressWarnings("unchecked")
 public class Vector_custom<T> {
-	Vector_custom<T[]> vec = new Vector_custom<T[]>();
+	Array_custom<T[]> vec = new Array_custom<T[]>(100000);
 	private int capacity;
 	private int chunk;
 	private int size;
